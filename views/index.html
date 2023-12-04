@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row" style="margin-top: 2rem;">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <form id="createPost" class="card">
+                    <div class="form-group">
+                        <label for="post">Post Link</label>
+                        <input type="text" class="form-control" id="post">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text-area" class="form-control" id="description">
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+            <div class="col-md-3"></div>
+            <ul id="postList"></ul>
+        </div>
+        <!-- <div class="card">
+            <div class="card-header">Header</div>
+             
+        </div> -->
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div id="cardItems"></div>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+        <i class="bi bi-chat-left-text-fill">hello</i>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const userPosts = document.getElementById('createPost');
+        const cardItems = document.getElementById('cardItems');
+
+        userPosts.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const post_link = document.getElementById('post').value;
+            const description = document.getElementById('description').value;
+
+            axios.post('http://localhost:3000/api/add_post', { post_link, description })
+                .then(response => {
+                    const post = response.data;
+                    addUpdateDeleteButtons(post);
+                })
+                .catch(error => console.error('Error adding user:', error));
+        });
+
+        // Fetch and display users on page load
+        axios.get('/api/get-posts')
+            .then(response => {
+                const posts = response.data;
+                posts.forEach(post => {
+                    addUpdateDeleteButtons(post);
+                });
+            })
+            .catch(error => console.error('Error fetching users:', error));
+
+        function addUpdateDeleteButtons(post) {
+            // const userId = post.id;
+            // const listItem = document.createElement('li');
+            // listItem.textContent = `Name: ${post.post_link}, Email: ${post.description}`;
+            // userPosts.reset();
+            // postList.appendChild(listItem);
+
+            const postItem = document.createElement('div');
+            postItem.className = 'card';
+            const img = document.createElement('img');
+            img.src =
+                'https://media.geeksforgeeks.org/wp-content/uploads/20190529122828/bs21.png';
+            postItem.appendChild(img);// adding image
+            const cmtBtn = document.createElement('button');
+            cmtBtn.className = 'btn btn-danger btn-sm delete';
+            const spans = document.createElement('span');
+            spans.className = 'glyphicon glyphicon-hand-right';
+            cmtBtn.appendChild(spans)
+            cmtBtn.textContent = 'button'
+            postItem.appendChild(cmtBtn); // adding commit button
+            cardItems.appendChild(postItem);
+            console.log(cardItems);
+
+
+            //     // Add Update and Delete buttons
+            //     const updateButton = document.createElement('button');
+
+            //     updateButton.textContent = 'Update';
+            //     updateButton.addEventListener('click', function () {
+            //         const newName = prompt('Enter new name:', listItem.dataset.name);
+            //         const newEmail = prompt('Enter new email:', listItem.dataset.email);
+
+            //         axios.put(`/api/users/${userId}`, { name: newName, email: newEmail })
+            //             .then(response => {
+            //                 const updatedUser = response.data;
+            //                 listItem.textContent = `Name: ${updatedUser.name}, Email: ${updatedUser.email}`;
+            //                 listItem.dataset.name = updatedUser.name;
+            //                 listItem.dataset.email = updatedUser.email;
+
+            //                 listItem.appendChild(updateButton);
+
+            //             })
+            //             .catch(error => console.error('Error updating user:', error));
+            //     });
+
+            //     const deleteButton = document.createElement('button');
+            //     deleteButton.textContent = 'Delete';
+            //     deleteButton.addEventListener('click', function () {
+            //         axios.delete(`/api/users/${userId}`)
+            //             .then(() => {
+            //                 listItem.remove();
+            //             })
+            //             .catch(error => console.error('Error deleting user:', error));
+            //     });
+
+            //     listItem.appendChild(updateButton);
+            //     listItem.appendChild(deleteButton);
+
+            // // Set data attributes for the user
+            // listItem.dataset.id = userId;
+            // listItem.dataset.name = listItem.textContent.split(', ')[0].split(': ')[1];
+            // listItem.dataset.email = listItem.textContent.split(', ')[1].split(': ')[1];
+        }
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+</body>
+
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+
+
+</html> -->

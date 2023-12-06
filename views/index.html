@@ -9,8 +9,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
 
 </head>
 
@@ -41,12 +40,12 @@
         </div> -->
         <div class="row">
             <div class="col-md-4"></div>
-            <div class="col-md-4">
-                <div id="cardItems"></div>
+            <div class="col-md-4" id="cardItems">
+
             </div>
             <div class="col-md-4"></div>
         </div>
-        <i class="bi bi-chat-left-text-fill">hello</i>
+
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -79,27 +78,66 @@
             .catch(error => console.error('Error fetching users:', error));
 
         function addUpdateDeleteButtons(post) {
-            // const userId = post.id;
-            // const listItem = document.createElement('li');
-            // listItem.textContent = `Name: ${post.post_link}, Email: ${post.description}`;
-            // userPosts.reset();
-            // postList.appendChild(listItem);
-
+            const post_id = post.id;
             const postItem = document.createElement('div');
             postItem.className = 'card';
             const img = document.createElement('img');
             img.src =
-                'https://media.geeksforgeeks.org/wp-content/uploads/20190529122828/bs21.png';
+                `${post.post_link}`;
             postItem.appendChild(img);// adding image
+
+            // create post description 
+            postItem.appendChild(document.createTextNode(`${post.description}`));
+
+            // Create comments button 
             const cmtBtn = document.createElement('button');
-            cmtBtn.className = 'btn btn-danger btn-sm delete';
+            cmtBtn.className = ' btn btn-sm btn-center comment';
             const spans = document.createElement('span');
             spans.className = 'glyphicon glyphicon-hand-right';
             cmtBtn.appendChild(spans)
-            cmtBtn.textContent = 'button'
+            cmtBtn.appendChild(document.createTextNode(' comment'));
             postItem.appendChild(cmtBtn); // adding commit button
             cardItems.appendChild(postItem);
             console.log(cardItems);
+            cmtBtn.addEventListener('click', function () {
+                console.log(post_id)
+                const form = document.createElement('form');
+                const input = document.createElement('input');
+                input.className = 'form-control';
+                input.id = 'commit_id';
+                const send = document.createElement('button');
+                send.className = ' btn btn-primary right btn-sm';
+                send.appendChild(document.createTextNode('send'));
+                form.appendChild(input);
+                form.appendChild(send);
+                postItem.appendChild(form);
+                console.log(input);
+                axios.get(`/api/get_comment/${post_id}`)
+                    .then(response => {
+                        const comments = response.data;
+                        comments.forEach(comment => {
+
+                            postItem.appendChild(document.createTextNode(`comment ${comment.id} :${comment.comment_description}`));
+
+                        });
+                    })
+                    .catch(error => console.error('Error fetching users:', error));
+                // send the comments to user 
+                send.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    const comment_description = document.getElementById('commit_id').value;
+                    // console.log(post_id);
+                    // console.log(comment_description);
+                    axios.post(`http://localhost:3000/api/add_comment/${post_id}`, { comment_description })
+                        .then(response => {
+                            console.log(response.date);
+                        })
+                        .catch(error => console.error('Error adding user:', error));
+
+                });
+
+
+            })
 
 
             //     // Add Update and Delete buttons

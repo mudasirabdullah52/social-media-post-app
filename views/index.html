@@ -116,9 +116,10 @@
                     .then(response => {
                         const comments = response.data;
                         comments.forEach(comment => {
-
-                            postItem.appendChild(document.createTextNode(`comment ${comment.id} :${comment.comment_description}`));
-
+                            const heading = document.createElement('h6')
+                            heading.appendChild(document.createTextNode(`comment ${comment.id} :${comment.comment_description}`))
+                            // postItem.appendChild(document.createTextNode(`comment ${comment.id} :${comment.comment_description}`));
+                            postItem.appendChild(heading);
                         });
                     })
                     .catch(error => console.error('Error fetching users:', error));
